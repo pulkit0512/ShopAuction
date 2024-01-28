@@ -17,11 +17,15 @@ import java.util.List;
 public class ShopController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShopController.class);
     private static final String TOKEN_NOT_VALID = "Token Not Valid";
-    private static final String INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
 
     private AuthenticationService authenticationService;
 
     private ShopServiceImpl shopService;
+
+    @GetMapping("/")
+    public String hello() {
+        return "Service for shopping auction items.";
+    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
@@ -30,8 +34,8 @@ public class ShopController {
             String jwtToken = authenticationService.login(modifiedUserName, password);
             return new ResponseEntity<>(jwtToken, HttpStatus.OK);
         } catch (Exception ex) {
-            LOGGER.warn(INVALID_CREDENTIALS);
-            return new ResponseEntity<>(INVALID_CREDENTIALS, HttpStatus.UNAUTHORIZED);
+            LOGGER.error(ex.getMessage());
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
